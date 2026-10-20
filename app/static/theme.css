@@ -1,0 +1,43 @@
+/* Dark is the workspace default; the reader's selection is saved in their browser. */
+:root{color-scheme:light}
+.theme-toggle{display:flex;align-items:center;gap:10px;width:100%;margin:20px 0 0;padding:10px 14px;border:1px solid #395064;border-radius:8px;background:#182e41;color:#e5edf5;font:600 12px Manrope,'Segoe UI',sans-serif;text-align:left}
+.theme-toggle:hover{background:#22435e}
+.theme-toggle:focus-visible{outline:2px solid #83c4ff;outline-offset:3px}
+.theme-toggle>span:first-child{font-size:18px}
+html[data-theme=dark]{color-scheme:dark;--ink:#e5edf6;--muted:#a2b1c5;--line:#2b3b50;--bg:#0c1420;--blue:#83bbff;--cyan:#68cbe5;--green:#63d6ad;--orange:#f3b960;--surface:#152131;--raised:#1c2b3e;--soft:#101b2a}
+html[data-theme=dark] :is(.topbar,.card,.progress-card,.stat,.secondary,.review-totals>a){background:var(--surface);box-shadow:none}
+html[data-theme=dark] :is(.header-search,.back-button,.subtle-chip,.sort-label,.posts-table th,.mapping-table th,.mapping-rule,.device-controls,.compare-heading,.preview-stage){background:var(--soft);color:var(--muted);border-color:var(--line)}
+html[data-theme=dark] :is(input,textarea,select,.approval-body textarea,.editor-fields input,.editor-fields textarea,.import-mapping select,select.mapped-field){background:var(--soft);color:var(--ink);border-color:var(--line);-webkit-text-fill-color:var(--ink)}
+html[data-theme=dark] .header-search input{background:transparent}
+html[data-theme=dark] ::placeholder{color:#96a6bd;opacity:1}
+html[data-theme=dark] :is(.primary,.mapping-icon){background:#2267b9;color:#fff}
+html[data-theme=dark] .primary:hover:enabled{background:#2b79d2}
+html[data-theme=dark] :is(.secondary:hover,.posts-table tbody tr:hover,.page-number:hover){background:var(--raised)}
+html[data-theme=dark] :is(.posts-table td,.mapping-table td,.activity-row,.activity-bottom,.metadata-item,.validation-check,.device-toolbar,.status-note){border-color:var(--line)}
+html[data-theme=dark] :is(.status-details dd,.status-row strong,.post-title,.mapped-field,.mapping-total){color:var(--ink)}
+html[data-theme=dark] :is(.progress-meta,.status-row>div,.pagination,.sort-label,.review-totals>a,.approval-body>label,.editor-fields>label,.editor-body-label>label,.review-history,.validation-issues summary,.sample-cell,.page-note,.blue-text){color:var(--muted)}
+html[data-theme=dark] :is(.text-link,.preview-link,.outgoing-html summary){color:#8ec6ff}
+html[data-theme=dark] :is(.source-panel pre,.outgoing-html pre,.destination-body code){background:var(--soft);color:#bfd4eb;border-color:var(--line)}
+html[data-theme=dark] :is(.device.active,.content-tab.active,.status-tab.active,.page-number.active){background:#234361;color:#b8dcff}
+html[data-theme=dark] :is(.field-code,.rule-destination,.mapping-rule>.field-code,.editor-info,.mapping-notice){background:#1b344b;color:#b4d9ff;border-color:#365673}
+html[data-theme=dark] :is(.editor-info strong,.editor-info p,.mapping-notice p,.demo-banner strong){color:#aecdea}
+html[data-theme=dark] :is(.notice,.local-copy-note,.import-success){background:#12382f;border-color:#2a6253;color:#9be5ca}
+html[data-theme=dark] .local-copy-note p{color:#9bcbbb}
+html[data-theme=dark] :is(.notice.error,.issue-error){background:#42252e;border-color:#75414e;color:#ffb3be}
+html[data-theme=dark] .issue-warning{background:#3b3020;color:#f6d397}
+html[data-theme=dark] :is(.badge.published,.badge.review-approved,.badge.validation-ready,.review-imported,.green,.check-symbol.passed){background:#173e34;color:#83e0ba}
+html[data-theme=dark] :is(.badge.draft,.badge.review-pending,.blue){background:#203b58;color:#a5cfff}
+html[data-theme=dark] :is(.badge.scheduled,.badge.validation-warning,.amber,.check-symbol.warning){background:#43341d;color:#f4c774}
+html[data-theme=dark] :is(.badge.review-rejected,.badge.validation-error,.red,.check-symbol.error){background:#462731;color:#ffaaba}
+html[data-theme=dark] :is(.cyan,.tag){background:#163c49;color:#91dbea}
+html[data-theme=dark] :is(.status-track,.compare-frames){background:#2b3b50}
+html[data-theme=dark] .ring-track{stroke:#2b3b50}
+html[data-theme=dark] .progress-bar::-webkit-progress-bar{background:#2b3b50}
+html[data-theme=dark] :is(.author-cell,.date-cell,.post-slug,.muted){color:#a2b1c5}
+html[data-theme=dark] .green-text{color:#78dcb3}
+html[data-theme=dark] .amber-text{color:#f3bf72}
+html[data-theme=dark] .cyan-text{color:#77d1e6}
+html[data-theme=dark] .status-track::-webkit-progress-bar{background:#2b3b50}
+html[data-theme=dark] :focus-visible{outline:2px solid #8ec6ff;outline-offset:3px}
+/* Article frames keep their source reading style for accurate content review. */
+@media(max-width:800px){.theme-toggle{width:auto;margin:0 0 0 auto;padding:7px 12px}.sidebar nav{order:3;width:100%;justify-content:space-between}}

@@ -1,0 +1,69 @@
+{% from "macros.html" import sync_button with context %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Blog Migration Manager{% endblock %}</title>
+    <script src="/static/theme.js"></script>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme.css">
+    <script src="/static/app.js" defer></script>
+</head>
+
+<body>
+    <aside class="sidebar"><a class="brand" href="/"
+            aria-label="Blog Migration Manager home"><span><strong>S.Will</strong> BWO-SSG</span><small>Blog
+                Migration Manager</small></a>
+        <nav aria-label="Main navigation"><a class="nav-item {% if active == 'dashboard' %}active{% endif %}" href="/"
+                {% if active=='dashboard' %}aria-current="page" {% endif %}><span
+                    class="nav-icon">📊</span>Dashboard</a><a
+                class="nav-item {% if active == 'posts' %}active{% endif %}" href="/posts" {% if active=='posts'
+                %}aria-current="page" {% endif %}><span class="nav-icon">📝</span>Blog Posts<span class="nav-count">{{
+                    stats.total if stats else 0 }}</span></a><span class="nav-item unavailable" aria-disabled="true"
+                title="Media management is planned for a later phase"><span class="nav-icon">🖼️</span>Media
+                Library<small>Later</small></span><a class="nav-item {% if active == 'mapping' %}active{% endif %}"
+                href="/field-mapping" {% if active=='mapping' %}aria-current="page" {% endif %}><span
+                    class="nav-icon">🔀</span>Field Mapping</a><a class="nav-item" href="/posts?review=PENDING"><span
+                    class="nav-icon">✓</span>Review queue<span class="nav-count">{{ review_stats.pending if review_stats
+                    else 0 }}</span></a><span class="nav-item unavailable" aria-disabled="true"><span
+                    class="nav-icon">↪</span>Redirects<small>Later</small></span><span class="nav-item unavailable"
+                aria-disabled="true"><span class="nav-icon">📈</span>Reports<small>Later</small></span><a
+                class="nav-item {% if active == 'destination' %}active{% endif %}" href="/destination" {% if
+                active=='destination' %}aria-current="page" {% endif %}><span class="nav-icon">⚙</span>WordPress</a>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="true"><span
+                aria-hidden="true">&#9680;</span> <span id="theme-label">Dark mode</span></button>
+        <div class="sidebar-summary">
+            <div><span>Local library</span><strong>{{ stats.total if stats else 0 }}</strong></div>
+            <div class="sidebar-track"><span></span></div><small>{% if demo %}Sample content · Demo workspace{% else
+                %}HubSpot → Local workspace{% endif %}</small>
+        </div>
+        <div class="workspace-profile"><span class="profile-avatar">SW</span>
+            <div><strong>Local workspace</strong><small>Phase 3 · Content library</small></div>
+        </div>
+        <div class="local-footnote"><i></i> Stored on your computer</div>
+    </aside>
+    <div class="shell">
+        <header class="topbar">
+            <div class="header-title">{% block header_lead %}{% endblock %}<div>
+                    <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+                    <p>{% block page_subtitle %}Overview of your HubSpot blog content{% endblock %}</p>
+                </div>
+            </div>
+            <div class="header-actions">{% block header_actions %}<form class="header-search" action="/posts"><span
+                        aria-hidden="true">⌕</span><input type="search" name="q" value="{{ q or '' }}"
+                        placeholder="Search posts…" aria-label="Search posts" maxlength="200"><button class="sr-only"
+                        type="submit">Search</button></form>{{ sync_button() }}{% endblock %}</div>
+        </header>
+        <main>{% if demo %}<div class="demo-banner"><span class="demo-dot"></span><strong>Demo
+                    workspace</strong><span>Sample content in a separate local library.</span></div>{% endif %}{% block
+            content %}{% endblock %}</main>
+        <footer><span>SWILL · Blog Migration Manager</span><span>Phase 3 · {% if demo %}Demo workspace{%
+                else %}Local environment{% endif %}</span></footer>
+    </div>
+</body>
+
+</html>

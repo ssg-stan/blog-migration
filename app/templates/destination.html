@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block page_title %}WordPress{% endblock %}
+{% block page_subtitle %}Choose individual approved posts to import as drafts{% endblock %}
+{% block header_actions %}<a class="button primary" href="/posts?review=APPROVED">Choose a post to import</a>{% endblock
+%}
+{% block content %}<div class="destination-layout">
+    <section class="card">
+        <div class="card-heading">
+            <h2>WordPress connection</h2>
+        </div>
+        <div class="destination-body">
+            <p>{% if destination.simulated %}Demo mode simulates WordPress imports locally. No API calls are made.{%
+                else %}Connect your WordPress site using a dedicated application password. Credentials stay on this
+                computer.{% endif %}</p>
+            <dl class="status-details">
+                <dt>Site URL</dt>
+                <dd>{{ destination.location_id or 'Not configured' }}</dd>
+                <dt>Status</dt>
+                <dd>{{ 'Simulated' if destination.simulated else ('Configured' if destination.configured else 'Setup
+                    needed') }}</dd>
+                <dt>Import mode</dt>
+                <dd>One selected post, saved as a draft</dd>
+            </dl>
+            <button class="button primary" id="destination-check" {% if not destination.configured %}disabled{% endif
+                %}>Check connection</button>
+            <p id="destination-message" class="notice" role="status" hidden></p>
+        </div>
+    </section>
+    <section class="card">
+        <div class="card-heading">
+            <h2>Set up WordPress</h2>
+        </div>
+        <div class="destination-body">
+            <ol>
+                <li>In WordPress, open Users ? Profile and create an application password for a user allowed to edit
+                    posts.</li>
+                <li>Set <code>WORDPRESS_URL</code> (the HTTPS site root), <code>WORDPRESS_USERNAME</code>, and
+                    <code>WORDPRESS_APPLICATION_PASSWORD</code> in your local <code>.env</code>.</li>
+                <li>Restart without <code>--demo</code> and check the connection.</li>
+                <li>Open Blog Posts, choose a post, preview and approve it, then select <strong>Import to
+                        WordPress</strong>.</li>
+            </ol>
+            <p>Select an existing WordPress author and categories on the import page. Create matching tags in WordPress
+                first. Nothing is published automatically.</p>
+            <p>Article images retain source URLs. Set the featured image in WordPress after import. The description
+                becomes the WordPress excerpt; SEO plugin fields are not set.</p>
+            <p><a class="text-link" href="https://developer.wordpress.org/rest-api/reference/posts/" target="_blank"
+                    rel="noopener noreferrer">WordPress API documentation</a></p>
+        </div>
+    </section>
+</div>{% endblock %}

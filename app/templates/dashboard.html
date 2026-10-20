@@ -1,0 +1,97 @@
+{% extends "base.html" %}{% from "macros.html" import sync_button, post_table with context %}
+{% block content %}
+{% if not configured and not demo %}<section class="setup-card"><span class="setup-icon">↔</span>
+    <div>
+        <h2>Connect HubSpot to get started</h2>
+        <p>Add your private app token to <code>.env</code>, then restart the app.</p>
+        <ol>
+            <li>Create a HubSpot private app with the <code>content</code> scope.</li>
+            <li>Set <code>HUBSPOT_ACCESS_TOKEN</code> in your local <code>.env</code> file.</li>
+            <li>Restart and select <strong>Sync from HubSpot</strong>.</li>
+        </ol>
+    </div>
+</section>{% endif %}
+<section class="progress-card">
+    <div class="progress-main">
+        <div class="progress-eyebrow">LOCAL CONTENT LIBRARY <span
+                class="badge {% if sync and sync.status == 'ERROR' %}error{% else %}published{% endif %}"><i></i>{% if
+                sync and sync.status == 'ERROR' %}Sync needs attention{% elif stats.total %}Ready to preview{% else
+                %}Ready to connect{% endif %}</span></div>
+        <div class="progress-count">{{ '{:,}'.format(stats.total) }} <span>HubSpot post{{ '' if stats.total == 1 else
+                's' }} stored locally</span></div><progress class="progress-bar" value="{{ stats.published }}"
+            max="{{ stats.total or 1 }}" aria-label="Published source posts"></progress>
+        <div class="progress-meta"><span>{{ stats.published }} published · {{ stats.drafts }} drafts · {{
+                stats.scheduled }} scheduled</span><span>{% if sync and sync.finished_at %}Last attempt: <time
+                    data-local-time="{{ sync.finished_at }}">{{ sync.finished_at|date }} UTC</time>{% else %}No syncs
+                yet{% endif %}</span></div>
+        <div class="progress-actions">{{ sync_button() }}<a class="button secondary" href="/posts">View blog posts</a>
+        </div>
+    </div>
+    <div class="progress-ring-wrap"><svg class="progress-ring" viewBox="0 0 120 120" role="img"
+            aria-label="{{ published_percent }} percent of local posts are published in HubSpot">
+            <circle class="ring-track" cx="60" cy="60" r="48" />
+            <circle class="ring-value" cx="60" cy="60" r="48" pathLength="100"
+                stroke-dasharray="{{ published_percent }} 100" />
+        </svg>
+        <div class="ring-label"><strong>{{ published_percent }}%</strong><span>source published</span></div>
+    </div>
+</section>
+<div id="sync-message" class="notice {% if sync and sync.status == 'ERROR' %}error{% endif %}" role="status"
+    aria-live="polite" {% if not sync %}hidden{% endif %}>{% if sync %}{% if sync.status == 'RUNNING' %}Syncing from
+    HubSpot… {{ sync.fetched }} posts fetched.{% else %}{{ sync.message }}{% endif %}{% endif %}</div>
+<section class="stats-grid" aria-label="Library summary">{% for name, value, symbol, color, detail in
+    [('Published',stats.published,'✓','green','Published in HubSpot'),('Drafts',stats.drafts,'◉','blue','Unpublished
+    source posts'),('Scheduled',stats.scheduled,'◷','amber','Scheduled in HubSpot'),('Latest sync',sync.fetched if sync
+    else 0,'↻','cyan','Posts fetched in last attempt')] %}<div class="stat"><span class="stat-icon {{ color }}">{{
+            symbol }}</span><span class="stat-label">{{ name }}</span><strong>{{ '{:,}'.format(value) }}</strong><small
+            class="{{ color }}-text">{{ detail }}</small></div>{% endfor %}</section>
+<section class="review-totals" aria-label="Review progress"><a href="/posts?review=PENDING">Pending review <strong>{{
+            review_stats.pending }}</strong></a><a href="/posts?review=APPROVED">Approved <strong>{{
+            review_stats.approved }}</strong></a><a href="/posts?review=REJECTED">Rejected <strong>{{
+            review_stats.rejected }}</strong></a><a href="/posts?review=IMPORTED">Imported <strong>{{
+            review_stats.imported }}</strong></a><a href="/posts?validation=ERROR">Validation errors <strong>{{
+            review_stats.errors }}</strong></a></section>
+<div class="dashboard-grid">
+    <section class="card activity-card">
+        <div class="card-heading">
+            <h2>Recent sync activity</h2><span class="subtle-chip">{% if demo %}Demo library{% else %}HubSpot{% endif
+                %}</span>
+        </div>
+        <div class="activity-list">{% for run in history %}<div class="activity-row"><span
+                    class="activity-icon {% if run.status == 'SUCCESS' %}green{% elif run.status == 'ERROR' %}red{% else %}blue{% endif %}">{%
+                    if run.status == 'SUCCESS' %}✓{% elif run.status == 'ERROR' %}×{% else %}↻{% endif %}</span>
+                <div><strong>{% if run.status == 'SUCCESS' %}{{ run.fetched }} posts synced{% elif run.status == 'ERROR'
+                        %}Sync interrupted{% else %}Sync in progress{% endif %}</strong>
+                    <p>{{ run.message or 'Fetching blog posts from HubSpot…' }}</p>
+                </div><time data-local-time="{{ run.finished_at or run.started_at }}">{{ (run.finished_at or
+                    run.started_at)|date }}</time>
+            </div>{% else %}<div class="activity-empty"><span>↻</span>
+                <h3>Your activity starts here</h3>
+                <p>Sync HubSpot to see your latest updates.</p>
+            </div>{% endfor %}</div>
+        <div class="activity-bottom"><i></i> {% if demo %}Demo posts are separate from your HubSpot library.{% else
+            %}Your original content is preserved in the local library.{% endif %}</div>
+    </section>
+    <section class="card status-card">
+        <div class="card-heading">
+            <h2>Posts by source status</h2><span class="subtle-chip">Source: HubSpot</span>
+        </div>{% for name,key,color in
+        [('Published','published','green'),('Drafts','drafts','blue'),('Scheduled','scheduled','amber')] %}<div
+            class="status-row">
+            <div><span class="status-dot {{ color }}"></span><span>{{ name }}</span><strong>{{ stats[key] }}</strong>
+            </div><progress value="{{ stats[key] }}" max="{{ stats.total or 1 }}" class="status-track {{ color }}"
+                aria-label="{{ name }} source posts"></progress>
+        </div>{% endfor %}<div class="status-note">Source statuses describe your HubSpot posts. Review posts locally
+            before importing in Phase 3.</div>
+    </section>
+</div>
+<section class="card recent-posts">
+    <div class="card-heading">
+        <h2>Recent blog posts <span class="count">{{ stats.total }}</span></h2><a class="text-link" href="/posts">View
+            all →</a>
+    </div>{% if posts %}{{ post_table(posts,true) }}{% else %}<div class="empty-state"><span class="empty-icon">▤</span>
+        <h3>Your library is ready for its first post</h3>
+        <p>Connect HubSpot and sync your posts to get started.</p>
+    </div>{% endif %}
+</section>
+{% endblock %}
